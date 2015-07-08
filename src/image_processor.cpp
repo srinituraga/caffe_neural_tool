@@ -318,8 +318,12 @@ void ImageProcessor::SetLabelHistEqParams(bool apply, bool patch_prior,
   apply_label_hist_eq_ = apply;
   apply_label_patch_prior_ = patch_prior;
   apply_label_pixel_mask_ = mask_prob;
-  label_mask_prob_rand_.resize(omp_get_max_threads());
-  for (int i = 0; i < omp_get_max_threads(); ++i) {
+//  label_mask_prob_rand_.resize(omp_get_max_threads());
+//  for (int i = 0; i < omp_get_max_threads(); ++i) {
+//    label_mask_prob_rand_[i] = GetRandomUniform<float>(0.0, 1.0);
+//  }
+  label_mask_prob_rand_.resize(1);
+  for (int i = 0; i < 1; ++i) {
     label_mask_prob_rand_[i] = GetRandomUniform<float>(0.0, 1.0);
   }
   label_boost_ = label_boost;
@@ -446,7 +450,8 @@ std::vector<cv::Mat> TrainImageProcessor::DrawPatchRandom() {
 #pragma omp parallel
     {
       std::function<float()> &randprob =
-          label_mask_prob_rand_[omp_get_thread_num()];
+          label_mask_prob_rand_[1];
+//          label_mask_prob_rand_[omp_get_thread_num()];
 #pragma omp for
       for (int y = 0; y < patch_size_; ++y) {
         for (int x = 0; x < patch_size_; ++x) {

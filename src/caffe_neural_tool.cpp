@@ -16,7 +16,7 @@
 #include <iostream>
 #include <map>
 #include <stdio.h>
-#include <omp.h>
+//#include <omp.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <boost/program_options.hpp>
@@ -49,9 +49,9 @@ int main(int argc, const char** argv) {
   ("cpu", "use fallback CPU backend")  //
   ("debug", "enable debugging messages")  //
   ("graphic", "graphical debug output")  //
-  ("ompthreads",
-   bopo::value<int>(&thread_count)->default_value(omp_get_num_procs()),
-   "number of OpenMP threads to use)")  //
+//  ("ompthreads",
+//   bopo::value<int>(&thread_count)->default_value(omp_get_num_procs()),
+//   "number of OpenMP threads to use)")  //
   ("proto", bopo::value<std::string>(&proto), "configuration prototxt file")  //
   ("train", bopo::value<int>(&train_index),
    "training mode with training parameter set")  //
@@ -65,7 +65,7 @@ int main(int argc, const char** argv) {
   bopo::store(bopo::parse_command_line(argc, argv, desc), varmap);
   bopo::notify(varmap);
 
-  omp_set_num_threads(thread_count);
+//  omp_set_num_threads(thread_count);
 
   if (varmap.count("silent")) {
     FLAGS_logtostderr = 0;

@@ -6,7 +6,8 @@ include $(CONFIG_FILE)
 
 # Compiler configuration
 CXX=g++
-CXXFLAGS = -Wall -std=c++11 -fopenmp -Wno-sign-compare
+#CXXFLAGS = -Wall -std=c++11 -fopenmp -Wno-sign-compare
+CXXFLAGS = -Wall -std=c++11 -Wno-sign-compare
 CXXDBG = -O0 -g
 CXXRUN = -O3
 
@@ -35,19 +36,24 @@ INCLUDE = 	-I$(INC) \
 			-I$(CAFFE_PATH)/include \
 			-I$(CAFFE_PATH)/caffe \
 			-I$(CAFFE_PATH)/caffe/src \
-			-I$(CAFFE_PATH)/build/src
+			-I$(CAFFE_PATH)/build/src \
+			-I$(HOME)/anaconda/include \
+			-I$(HOME)/include \
+			-I/usr/local/mkl/include
 			
 # Library dependencies
 ifeq ($(CAFFE_MAKE_BUILD), 1)
-	LIBRARY = 	-Wl,-Bstatic,--whole-archive -L$(CAFFE_PATH)/build/lib/ -lcaffe -Wl,-Bdynamic,--no-whole-archive \
+	LIBRARY = 	-L/opt/rh/devtoolset-3/root/usr/lib/gcc/x86_64-redhat-linux/4.9.1/ \
+			-Wl,-Bstatic,--whole-archive -L$(CAFFE_PATH)/build/lib/ -lcaffe -Wl,-Bdynamic,--no-whole-archive \
 				-lopencv_core -lopencv_highgui -lopencv_imgproc \
-				-lpthread -lprotobuf -lglog -lgflags -lopenblas \
+				-lpthread -lprotobuf -lglog -lgflags -lmkl_rt \
 				-lleveldb -lhdf5_hl -lhdf5 -lsnappy -llmdb -ltiff \
-				-lboost_system -lboost_thread -lboost_program_options -lboost_filesystem
+				-lboost_system -lboost_thread -lboost_program_options -lboost_filesystem \
+				-L$(HOME)/anaconda/lib -L$(HOME)/lib -L$(HOME)/lib64 -L/usr/local/mkl/lib/intel64
 else
 	LIBRARY = 	-Wl,-Bstatic,--whole-archive -L$(CAFFE_PATH)/build/lib/ -lcaffe -lproto -Wl,-Bdynamic,--no-whole-archive \
 				-lopencv_core -lopencv_highgui -lopencv_imgproc \
-				-lpthread -lprotobuf -lglog -lgflags -lopenblas \
+				-lpthread -lprotobuf -lglog -lgflags -lmkl \
 				-lleveldb -lhdf5_hl -lhdf5 -lsnappy -llmdb -ltiff \
 				-lboost_system -lboost_thread -lboost_program_options -lboost_filesystem -lboost_python -lpython2.7
 endif
